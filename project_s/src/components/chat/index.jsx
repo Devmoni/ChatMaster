@@ -6,6 +6,8 @@ import {
 } from "react-chat-engine-advanced";
 import Header from "@/components/customHeader";
 import StandardMessageForm from "@/components/customMessageForms/StandardMessageForm";
+import Ai from "../customMessageForms/Ai";
+import AiCode from "../customMessageForms/AiCode";
 
 function Chat() {
   const chatProps = useMultiChatLogic(
@@ -20,13 +22,18 @@ function Chat() {
       <MultiChatWindow
         {...chatProps}
         style={{ height: "100vh" }}
-        renderChatHeader={(chat) => {
-          console.log("Chat Header Props:", chat);
-          return <Header chat={chat} />;
+        renderChatHeader={(chat) => <Header chat={chat} />}
+        renderMessageForm={(props) => {
+          if(chatProps.chat?.title.startsWith("AiChat_")){
+            return <Ai props={props} activeChat={chatProps.chat} />;
+          }
+          if(chatProps.chat?.title.startsWith("AiCode_")){
+            return <AiCode props={props} activeChat={chatProps.chat} />;
+          }
+          return (
+            <StandardMessageForm props={props} activeChat={chatProps.chat} />
+          );
         }}
-        renderMessageForm={(props) => (
-          <StandardMessageForm props={props} activeChat={chatProps.chat} />
-        )}
       />
     </div>
   );
